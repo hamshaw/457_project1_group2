@@ -99,10 +99,31 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-                        ....................................
-			....................................
-			....................................
+					Socket dataSocket = new Socket(connectionSocket.getInetAd    dress(), port);
+					DataOutputStream  dataOutToClient =
+					new DataOutputStream(dataSocket.getOutputStream());
+					File dir = new File(curDir);
 
+					String[] children = dir.list()
+					if(children == null)
+					{
+						data.OutToClient.writeUTF("file name not found");
+					}
+					else{
+						for(int i=0; i<children.length; i++)
+						{
+							String filename = children[i];
+							if( filename = getFilename)
+							{
+								data.OutToClient.writeUTF(children[i]);
+							}else
+							{
+								
+							}
+						}
+						dataSocket.close();
+					}
+				}
 
 
             }//main
