@@ -126,6 +126,16 @@ import javax.swing.*;
 				}
 
 
+                if(clientCommand.equals("put:")){
+                    //stuff
+                }
+
+
+                if(clientCommand.equals("quit")){
+                    connectionSocket.close()
+                }
+
+
             }//main
         }
 }
