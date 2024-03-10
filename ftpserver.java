@@ -30,7 +30,7 @@ public class ftpserver extends Thread {
         String fromClient;
         String clientCommand;
         byte[] data;
-        String frstln;
+        String firstLine;
 
         while (true) {
             if (count == 1)
@@ -43,11 +43,11 @@ public class ftpserver extends Thread {
 
             StringTokenizer tokens = new StringTokenizer(fromClient);
 
-            frstln = tokens.nextToken();
-            port = Integer.parseInt(frstln);
+            firstLine = tokens.nextToken();
+            port = Integer.parseInt(firstLine);
             clientCommand = tokens.nextToken();
             try {
-                String givenfilename = tokens.nextToken();
+                String givenFilename = tokens.nextToken();
             } catch (Exception e) {
             }
 
@@ -86,12 +86,12 @@ public class ftpserver extends Thread {
                     int found = 0;
                     for (int i = 0; i < children.length; i++) {
                         String filename = children[i];
-                        if (filename.equals(givenfilename)) {
+                        if (filename.equals(givenFilename)) {
                             found = 1;
-                            OutToClient.writeBytes(children[i].read());
+                            outToClient.writeBytes(children[i].read());
                         }
                         if (found == 0) {
-                            OutToClient.writeUTF("file name not found");
+                            outToClient.writeUTF("file name not found");
                         }
                     }
                 }
@@ -99,11 +99,11 @@ public class ftpserver extends Thread {
             }
 
             if (clientCommand.equals("stor:")) {
-                ClientSocket incomingData = new ClientSocket(port);
+                ServerSocket incomingData = new ServerSocket(port);
                 Socket dataSocket = incomingData.accept();
                 DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
-                File file = new File(givenfilename);
-                FileOutputStream fileOut = new FIleOutputStream(file);
+                File file = new File(givenFilename);
+                FileOutputStream fileOut = new FileOutputStream(file);
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = inData.read(buffer)) != -1) {
