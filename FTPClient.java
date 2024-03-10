@@ -64,19 +64,50 @@ class FTPClient {
 	 System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
         }
-         else if(sentence.startsWith("get: "))
-        {
-		.........................................................
-		.........................................................
-		.........................................................
+        else if(sentance.startsWith("list:")){
+            port += 2;
+            ServerSocket incomingData = new ServerSocket(port);
+            outToServer.writeBytes(port + ' ' +sentence + ' ' + '\n');
+            Socket dataSocket = incomingData.accept();
+            BufferedInputStream buffIn = new BufferedInputStream(dataSocket.getInputStream())
+            DataInputStream inData = new DataInputStream(buffIn);
+            System.out.println("The files on this server are: \n");
+            byte[] b = new byte[buffIn.available()];//ya idk what this line is for
+            int bytes = inData.read(b);//geeksforgeeks.org helped me with syntax for read()
+            for (byte by : b){
+                System.out.println((char)by);
+            }
+        }
+
+        else if(sentance.startsWith("get: ")){
+            String filename = sentence.substring(6);
+            port += 2;
+            ServerSocket incomingData = new ServerSocket(port);
+            outToServer.writeBytes(port + ' ' + sentence + ' '+ '\n');
+            Socket dataSocket = incomingData.accept();
+            DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+            File file = new File(filename);
+            FileOutputStream fileOut = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((butesRead = inData.read(buffer)) != -1) {
+                fileOut.write(buffer, 0, bytesRead);
+            }
+            fileOut.close();
+            incomingData.close();
+            dataSocket.close();
+            System.out.println("File " + filename + "downloaded.");
+        }
+        else if(sentance.startsWith("stor: ")){
+            ............
+            ............
+        }
 
 
-
-	else{
-	     if(sentence.equals("close"))
-	     {
-		clientgo = false;
-	     }
+	    else{
+	        if(sentence.equals("close")){
+		        clientgo = false;
+	        }
 	     System.out.print("No server exists with that name or server not listening on that port try agian");
                    
     } 
