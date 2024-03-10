@@ -53,6 +53,11 @@ import javax.swing.*;
                   frstln = tokens.nextToken();
                   port = Integer.parseInt(frstln);
                   clientCommand = tokens.nextToken();
+                  try{
+                      String givenfilename = tokens.nextToken();
+                  }
+                  catch{
+                  }
                   //System.out.println(clientCommand);
 
 
@@ -68,7 +73,7 @@ import javax.swing.*;
                       String[] children = dir.list();
                       if (children == null) 
                       {
-                          // Either dir does not exist or is not a directory
+                          dataOutToClient.writeUTF("directory not available");
                       } 
                       else 
                       {
@@ -78,7 +83,7 @@ import javax.swing.*;
                               String filename = children[i];
 
                               if(filename.endsWith(".txt"))
-                                dataOutToClient.writeUTF(children[i]);
+                                dataOutToClient.writeUTF(children[i]+ '\n');
                              //System.out.println(filename);
                              if(i-1==children.length-2)
                              {
@@ -99,39 +104,50 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-					Socket dataSocket = new Socket(connectionSocket.getInetAd    dress(), port);
+					Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
 					DataOutputStream  dataOutToClient =
 					new DataOutputStream(dataSocket.getOutputStream());
 					File dir = new File(curDir);
 
 					String[] children = dir.list()
-					if(children == null)
-					{
+					if(children == null){
 						data.OutToClient.writeUTF("file name not found");
 					}
 					else{
-						for(int i=0; i<children.length; i++)
-						{
+                        int found = 0;
+						for(int i=0; i<children.length; i++){
 							String filename = children[i];
-							if( filename = getFilename)
-							{
-								data.OutToClient.writeUTF(children[i]);
-							}else
-							{
-								
+							if(filename == givenfilename){
+								found = 1;
+                                OutToClient.writeBytes(children[i].read());
+							}
+							if(found==0){
+						        OutToClient.writeUTF("file name not found");
 							}
 						}
-						dataSocket.close();
-					}
+                    }
+                    dataSocket.close();
 				}
 
 
-                if(clientCommand.equals("put:")){
-                    //stuff
+                if(clientCommand.equals("stor:")){
+                    ClientSocket incomingData = new ClientSocket(port);
+                    Socket dataSocket = incomingData.accept();
+                    DataInputStream inData = new DataInputStream(new BufferedInputeStream(dataSocket.getInputStream()));
+                    File file = new File(givenfilename);
+                    FileOutputStream fileOut = new FIleOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while((bytesRead = inData.read(buffer)) != -1) {
+                        fileOut.write(buffer, 0, bytesRead);
+                    }
+                    fileOut.close();
+                    incomingData.close();
+                    dataSocket.close();
                 }
 
 
-                if(clientCommand.equals("quit")){
+                if(clientCommand.equals("close")){
                     connectionSocket.close()
                 }
 

@@ -90,7 +90,7 @@ class FTPClient {
             FileOutputStream fileOut = new FileOutputStream(file);
             byte[] buffer = new byte[1024];
             int bytesRead;
-            while ((butesRead = inData.read(buffer)) != -1) {
+            while ((bytesRead = inData.read(buffer)) != -1) {
                 fileOut.write(buffer, 0, bytesRead);
             }
             fileOut.close();
@@ -99,14 +99,36 @@ class FTPClient {
             System.out.println("File " + filename + "downloaded.");
         }
         else if(sentance.startsWith("stor: ")){
-            ............
-            ............
+            String filename = sentence.substring(7);
+            ServerSocket incomingData = new ServerSocket(port);
+            outToServer.writeBytes(port + ' ' + sentence + ' ' + '\n');
+            Socket dataSocket = incomingData.accept();
+            DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+            File dir = new File(curDir);
+            String[] children = dir.list();
+            if(children == null){
+                System.out.print("cannot find "+filename+" file");
+            }
+            else{
+            int found = 0;
+            for(int i = 0; i<children.length; i++){
+                if (filename == children[i]){
+                    found = 1;
+                    outToServer.writeBytes(children[i].read());
+                }
+            }
+            if(found==0){
+                System.out.print("cannot find "+filename+" file");
+            }
+            }
+            dataSocket.close();
         }
 
 
 	    else{
 	        if(sentence.equals("close")){
-		        clientgo = false;
+		        outToServer.writeBytes(sentence);
+                clientgo = false;
 	        }
 	     System.out.print("No server exists with that name or server not listening on that port try agian");
                    
