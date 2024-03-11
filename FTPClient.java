@@ -18,7 +18,7 @@ class FTPClient {
         String statusCode;
         boolean clientgo = true;
 
-        System.out.println("Welcome to the simple FTP App   \n     Commands  \nconnect servername port# connects to a specified server \nlist: lists files on server \nget: fileName.txt downloads that text file to your current directory \nstor: fileName.txt Stores the file on the server \nclose terminates the connection to the server");
+        System.out.println("Welcome to the simple FTP App   \nCommands  \nconnect servername port# connects to a specified server \nlist: lists files on server \nget: fileName.txt downloads that text file to your current directory \nstor: fileName.txt Stores the file on the server \nclose terminates the connection to the server");
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         sentence = inFromUser.readLine();
         StringTokenizer tokens = new StringTokenizer(sentence);
@@ -35,42 +35,28 @@ class FTPClient {
                 DataInputStream inFromServer = new DataInputStream(new BufferedInputStream(ControlSocket.getInputStream()));
                 sentence = inFromUser.readLine();
 
-                if (sentence.equals("list:")) {
+                if(sentence.equals("list:")){    
+	                port = port +2;
+        	        System.out.println(port);
+	                ServerSocket welcomeData = new ServerSocket(port);
 
-                    port = port + 2;
-                    System.out.println(port);
-                    ServerSocket welcomeData = new ServerSocket(port);
+	                System.out.println("\n \n \nThe files on this server are:");
+	                outToServer.writeBytes (port + " " + sentence + " " + '\n');
 
-                    System.out.println("\n \n \nThe files on this server are:");
-                    outToServer.writeBytes (port + " " + sentence + " " + '\n');
-
-                    Socket dataSocket = welcomeData.accept();
-                    DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
-                    while (notEnd) {
+	                Socket dataSocket =welcomeData.accept(); 
+ 	                DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+                    while(notEnd) {
                         modifiedSentence = inData.readUTF();
-                        if (modifiedSentence.equals("eof"))
-                            break;
-                       System.out.println("     " + modifiedSentence);
+                        if(modifiedSentence.equals("eof"))
+                            break; 
+                        System.out.println("	" + modifiedSentence);
                     }
 
-                 welcomeData.close();
-                 dataSocket.close();
-                 System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
+	                welcomeData.close();
+	                dataSocket.close();
+	                System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
-                } else if (sentence.startsWith("list:")) {
-                    port += 2;
-                    ServerSocket incomingData = new ServerSocket(port);
-                    outToServer.writeBytes(port + " " + sentence + " " + '\n');
-                    Socket dataSocket = incomingData.accept();
-                    BufferedInputStream buffIn = new BufferedInputStream(dataSocket.getInputStream());
-                    DataInputStream inData = new DataInputStream(buffIn);
-                    System.out.println("The files on this server are: \n");
-                    byte[] b = new byte[buffIn.available()];
-                    int bytes = inData.read(b);
-                    for (byte by : b) {
-                        System.out.println((char) by);
-                    }
-                } else if (sentence.startsWith("get: ")) {
+        } else if (sentence.startsWith("get: ")) {
                     String filename = sentence.substring(6);
                     port += 2;
                     ServerSocket incomingData = new ServerSocket(port);
@@ -115,12 +101,13 @@ class FTPClient {
                 } else {
                     if (sentence.equals("close")) {
                             outToServer.writeBytes(sentence);
-                    clientgo = false;
+                            isopen = false;
+                    }else{
+                        System.out.print("No server exists with that name or server not listening on that port try again");
                     }
-                    System.out.print("No server exists with that name or server not listening on that port try again");
                 }
-            }
-        }
-    }
-}
+            }//main while loop
+        }//if it starts with connect
+    }//main function
+}//class
 

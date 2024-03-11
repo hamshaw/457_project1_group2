@@ -48,31 +48,41 @@ public class ftpserver extends Thread {
             clientCommand = tokens.nextToken();
             try {
                 String givenFilename = tokens.nextToken();
-            } catch (Exception e) {
             }
 
-            if (clientCommand.equals("list:")) {
-                String curDir = System.getProperty("user.dir");
+            if(clientCommand.equals("list:"))
+                  { 
+                      String curDir = System.getProperty("user.dir");
+       
+                      Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                      DataOutputStream  dataOutToClient = 
+                      new DataOutputStream(dataSocket.getOutputStream());
+                      File dir = new File(curDir);
+    
+                      String[] children = dir.list();
+                      if (children == null) {
+                          dataOutToClient.writeUTF("directory not found")// Either dir does not exist or is not a directory
+                      }
+                      else {
+                          for (int i=0; i<children.length; i++){
+                              // Get filename of file or directory
+                              String filename = children[i];
 
-                Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                DataOutputStream dataOutToClient = new DataOutputStream(dataSocket.getOutputStream());
-                File dir = new File(curDir);
+                              if(filename.endsWith(".txt"))
+                                dataOutToClient.writeUTF(children[i]);
+                             //System.out.println(filename);
+                             if(i-1==children.length-2){
+                                 dataOutToClient.writeUTF("eof");
+                                 // System.out.println("eof");
+                             }//if(i-1)
+                          }//for
 
-                String[] children = dir.list();
-                if (children == null) {
-                    dataOutToClient.writeUTF("directory not available");
-                } else {
-                    for (int i = 0; i < children.length; i++) {
-                        String filename = children[i];
-                        if (filename.endsWith(".txt"))
-                            dataOutToClient.writeUTF(children[i] + '\n');
-                        if (i - 1 == children.length - 2) {
-                            dataOutToClient.writeUTF("eof");
-                        }
-                    }
-                    dataSocket.close();
-                }
-            }
+                           dataSocket.close();
+		                    //System.out.println("Data Socket closed");
+                     }//else
+        
+
+                }//if list:
 
             if (clientCommand.equals("get:")) {
                 Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
