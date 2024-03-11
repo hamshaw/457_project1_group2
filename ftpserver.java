@@ -61,7 +61,7 @@ public class ftpserver extends Thread {
     
                       String[] children = dir.list();
                       if (children == null) {
-                          dataOutToClient.writeUTF("directory not found")// Either dir does not exist or is not a directory
+                          throw new Exception("directory not found")// Either dir does not exist or is not a directory
                       }
                       else {
                           for (int i=0; i<children.length; i++){
@@ -89,19 +89,19 @@ public class ftpserver extends Thread {
                 DataOutputStream dataOutToClient = new DataOutputStream(dataSocket.getOutputStream());
                 File dir = new File(curDir);
 
-                String[] children = dir.list();
+                File[] children = dir.list();
                 if (children == null) {
-                    dataOutToClient.writeUTF("file name not found");
+                    throw new Exception("file name not found");
                 } else {
                     int found = 0;
                     for (int i = 0; i < children.length; i++) {
-                        String filename = children[i];
+                        String filename = (String)children[i];
                         if (filename.equals(givenFilename)) {
                             found = 1;
                             outToClient.writeBytes(children[i].read());
                         }
                         if (found == 0) {
-                            outToClient.writeUTF("file name not found");
+                            throw new Exception("file not found");
                         }
                     }
                 }
