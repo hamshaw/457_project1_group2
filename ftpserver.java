@@ -143,7 +143,6 @@ public class ftpserver extends Thread {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New connection accepted: " + clientSocket.getInetAddress());
                 new ftpserver(clientSocket).start();
             }
         } catch (IOException e) {
