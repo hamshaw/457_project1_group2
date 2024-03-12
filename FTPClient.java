@@ -37,7 +37,6 @@ class FTPClient {
 
                 if(sentence.equals("list:")){    
 	                port = port +2;
-        	        System.out.println(port);
 	                ServerSocket welcomeData = new ServerSocket(port);
 
 	                System.out.println("\n \n \nThe files on this server are:");
