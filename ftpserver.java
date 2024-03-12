@@ -134,5 +134,22 @@ public class ftpserver extends Thread {
             }
         }
     }
+	
+    public static void main(String[] args) {
+        int portNumber = 1200;
+        try {
+            ServerSocket serverSocket = new ServerSocket(portNumber);
+            System.out.println("FTP Server started on port " + portNumber);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("New connection accepted: " + clientSocket.getInetAddress());
+                new ftpserver(clientSocket).start();
+            }
+        } catch (IOException e) {
+            System.err.println("Could not listen on port " + portNumber);
+            System.exit(-1);
+        }
+    }
 }
 
