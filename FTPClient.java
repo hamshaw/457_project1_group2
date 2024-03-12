@@ -88,15 +88,15 @@ class FTPClient {
                     Socket dataSocket = incomingData.accept();
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
                     File dir = new File(System.getProperty("user.dir"));
-                    File[] children = dir.list();
+                    String[] children = dir.list();
                     if(children == null){
                         System.out.print("cannot find "+filename+" file");
                     } else{
                         int found = 0;
                         for(int i = 0; i<children.length; i++){
-                            if (filename.equals((String)children[i])){
+                            if (filename.equals(children[i])){
                                 found = 1;
-                                outToServer.writeBytes(children[i].read());
+                                outToServer.writeBytes(children[i]);
                             }
                         }
                         if(found==0){
@@ -109,7 +109,7 @@ class FTPClient {
                 } else {
                     if (sentence.equals("close")) {
                             outToServer.writeBytes(sentence);
-                            isopen = false;
+                            isOpen = false;
                             outToServer.close();
                     }else{
                         System.out.println("No server exists with that name or server not listening on that port try again\n");
