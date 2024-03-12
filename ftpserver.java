@@ -48,7 +48,9 @@ public class ftpserver extends Thread {
             clientCommand = tokens.nextToken();
             try {
                 String givenFilename = tokens.nextToken();
-            }
+            }catch (Exception e) {
+				System.out.println(e);
+			}
 
             if(clientCommand.equals("list:"))
                   { 
@@ -61,7 +63,7 @@ public class ftpserver extends Thread {
     
                       String[] children = dir.list();
                       if (children == null) {
-                          throw new Exception("directory not found")// Either dir does not exist or is not a directory
+                          throw new Exception("directory not found"); // Either dir does not exist or is not a directory
                       }
                       else {
                           for (int i=0; i<children.length; i++){

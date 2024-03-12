@@ -74,7 +74,7 @@ class FTPClient {
                     while ((bytesRead = inData.read(buffer)) != -1) {
                         fileOut.write(buffer, 0, bytesRead);
                     }
-                    fileOut.close()
+                    fileOut.close();
                     System.out.println("File " + filename + " downloaded.");
 
                     welcomeData.close();
@@ -105,12 +105,12 @@ class FTPClient {
                     }
                     dataSocket.close();
                     incomingData.close();
-                    inData.close()
+                    inData.close();
                 } else {
                     if (sentence.equals("close")) {
                             outToServer.writeBytes(sentence);
                             isopen = false;
-                            outToServer.close()
+                            outToServer.close();
                     }else{
                         System.out.println("No server exists with that name or server not listening on that port try again\n");
                     }
