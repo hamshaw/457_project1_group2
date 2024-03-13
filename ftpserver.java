@@ -47,13 +47,14 @@ public class ftpserver extends Thread {
             port = Integer.parseInt(firstLine);
             clientCommand = tokens.nextToken();
             //try {
-            String givenFilename = tokens.nextToken();
+            String givenFilename = "test.txt";//tokens.nextToken();
             //}catch (Exception e) {
 			//	System.out.println(e);
 			//}
 
             if(clientCommand.equals("list:"))
-                  { 
+                  {
+					  System.out.println("This is indeed doing something");
                       String curDir = System.getProperty("user.dir");
        
                       Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
