@@ -54,7 +54,6 @@ public class ftpserver extends Thread {
 
             if(clientCommand.equals("list:"))
                   {
-					  System.out.println("This is indeed doing something");
                       String curDir = System.getProperty("user.dir");
        
                       Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
@@ -96,18 +95,14 @@ public class ftpserver extends Thread {
 				File dir = new File(curDir);
 
                 String[] children = dir.list();
+				
                 if (children == null) {
                     throw new Exception("file name not found");
                 } else {
-                    int found = 0;
                     for (int i = 0; i < children.length; i++) {
-                        String filename = (String)children[i];
+                        String filename = children[i];
                         if (filename.equals(givenFilename)) {
-                            found = 1;
                             outToClient.writeBytes(children[i]);
-                        }
-                        if (found == 0) {
-                            throw new Exception("file not found");
                         }
                     }
                 }

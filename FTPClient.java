@@ -105,17 +105,17 @@ class FTPClient {
                     dataSocket.close();
                     incomingData.close();
                     inData.close();
-                } else {
-                    if (sentence.equals("close")) {
+                } else if (sentence.equals("close")) {
                             outToServer.writeBytes(sentence);
                             isOpen = false;
                             outToServer.close();
                     }else{
                         System.out.println("No server exists with that name or server not listening on that port try again\n");
                     }
-                }
+		
             }//main while loop
         }//if it starts with connect
+
     }//main function
 }//class
 
