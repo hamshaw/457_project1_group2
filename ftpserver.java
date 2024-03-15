@@ -46,11 +46,12 @@ public class ftpserver extends Thread {
             firstLine = tokens.nextToken();
             port = Integer.parseInt(firstLine);
             clientCommand = tokens.nextToken();
-            //try {
-            String givenFilename = "test.txt";//tokens.nextToken();
-            //}catch (Exception e) {
-			//	System.out.println(e);
-			//}
+            String givenFilename = null;
+            try {
+            	givenFilename = tokens.nextToken();
+            } catch (Exception e) {
+		System.out.println(e);
+	    }
 
             if(clientCommand.equals("list:"))
                   {
@@ -90,9 +91,8 @@ public class ftpserver extends Thread {
                 Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
                 DataOutputStream dataOutToClient = new DataOutputStream(dataSocket.getOutputStream());
                 
-				String curDir = System.getProperty("user.dir");
-
-				File dir = new File(curDir);
+		String curDir = System.getProperty("user.dir");
+		File dir = new File(curDir);
 
                 String[] children = dir.list();
 				
@@ -102,7 +102,17 @@ public class ftpserver extends Thread {
                     for (int i = 0; i < children.length; i++) {
                         String filename = children[i];
                         if (filename.equals(givenFilename)) {
-                            outToClient.writeBytes(children[i]);
+                            File fileToSend = new File(curDir, filename);
+		            FileInputStream fileInputStream = new FileInputStream(fileToSend);
+		            byte[] buffer = new byte[1024];
+		            int bytesRead;
+	                    while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+		                dataOutToClient.write(buffer, 0, bytesRead);
+		            }
+		            fileInputStream.close();
+		            dataOutToClient.flush();
+		            dataOutToClient.close();
+		            break;
                         }
                     }
                 }
