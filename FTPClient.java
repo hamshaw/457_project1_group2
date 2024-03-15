@@ -86,6 +86,7 @@ class FTPClient {
                     outToServer.writeBytes(port + " " + sentence + " " + '\n');
                     Socket dataSocket = incomingData.accept();
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+                    DataOutputStream outData = new DataOutputStream(dataSocket.getOutputStream());
                     File dir = new File(System.getProperty("user.dir"));
                     String[] children = dir.list();
                     if(children == null){
@@ -95,7 +96,7 @@ class FTPClient {
                         for(int i = 0; i<children.length; i++){
                             if (filename.equals(children[i])){
                                 found = 1;
-                                outToServer.writeBytes(children[i]);
+                                outData.writeBytes(children[i]);
                             }
                         }
                         if(found==0){

@@ -124,8 +124,11 @@ public class ftpserver extends Thread {
             }
 
             if (clientCommand.equals("stor:")) {
-                ServerSocket incomingData = new ServerSocket(port);
-                Socket dataSocket = incomingData.accept();
+                //port += 2
+                Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                
+                //Socket dataSocket = incomingData.accept();
+                DataOutputStream outdata = new DataOutputStream(dataSocket.getOutputStream());
                 DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
                 File file = new File(givenFilename);
                 FileOutputStream fileOut = new FileOutputStream(file);
@@ -135,7 +138,8 @@ public class ftpserver extends Thread {
                     fileOut.write(buffer, 0, bytesRead);
                 }
                 fileOut.close();
-                incomingData.close();
+                inData.close();
+                outdata.close();
                 dataSocket.close();
             }
 
