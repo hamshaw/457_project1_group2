@@ -106,6 +106,9 @@ class FTPClient {
                     dataSocket.close();
                     incomingData.close();
                     inData.close();
+		    System.out.println("\nFile Uploaded.");
+                    System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
+			
                 } else if (sentence.equals("close")) {
                             outToServer.writeBytes(port + " "+sentence);
                             isOpen = false;
