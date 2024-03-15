@@ -106,7 +106,7 @@ class FTPClient {
                     incomingData.close();
                     inData.close();
                 } else if (sentence.equals("close")) {
-                            outToServer.writeBytes(sentence);
+                            outToServer.writeBytes(port + " "+sentence);
                             isOpen = false;
                             outToServer.close();
                     }else{

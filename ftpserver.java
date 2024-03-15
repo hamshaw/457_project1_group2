@@ -43,7 +43,7 @@ public class ftpserver extends Thread {
 
             StringTokenizer tokens = new StringTokenizer(fromClient);
 
-            firstline = tokens.nextToken();
+            firstLine = tokens.nextToken();
             try {
                 port = Integer.parseInt(firstLine);
             } catch (Exception e) {
