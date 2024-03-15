@@ -57,7 +57,7 @@ class FTPClient {
 	                System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
         } else if (sentence.startsWith("get: ")) {
-                    String filename = sentence.substring(6);
+                    String filename = sentence.substring(5);
                     port += 2;
                     System.out.println(port);
                     ServerSocket welcomeData = new ServerSocket(port);
@@ -80,7 +80,7 @@ class FTPClient {
 	                dataSocket.close();
 	                System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
                 } else if (sentence.startsWith("stor: ")) {
-                    String filename = sentence.substring(7);
+                    String filename = sentence.substring(6);
                     port += 2;
                     ServerSocket incomingData = new ServerSocket(port);
                     outToServer.writeBytes(port + " " + sentence + " " + '\n');
