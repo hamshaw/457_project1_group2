@@ -43,14 +43,18 @@ public class ftpserver extends Thread {
 
             StringTokenizer tokens = new StringTokenizer(fromClient);
 
-            firstLine = tokens.nextToken();
-            port = Integer.parseInt(firstLine);
-            clientCommand = tokens.nextToken();
+            firstline = tokens.nextToken();
+            try {
+                port = Integer.parseInt(firstLine);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            clientCommand = (String)tokens.nextToken();
             String givenFilename = null;
             try {
             	givenFilename = tokens.nextToken();
             } catch (Exception e) {
-		System.out.println(e);
+		//System.out.println(e);
 	    }
 
             if(clientCommand.equals("list:"))
